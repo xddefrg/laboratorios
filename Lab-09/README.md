@@ -102,9 +102,9 @@ Creación, edición y eliminación públicas de recursos.
 Recuperación de contraseñas mediante correo electrónico, autenticación OAuth y autenticación multifactor (MFA).
 
 Configuraciones para entornos de producción.
+Funcionalidades no incluidas
+Creación, edición y eliminación públicas de recursos.
 
-## Not included
+Recuperación de contraseñas mediante correo electrónico, autenticación OAuth y autenticación multifactor (MFA).
 
-- Public create, edit and delete for resources.
-- Password reset by email, OAuth, multi-factor authentication.
-- Production settings.
+Configuraciones para entornos de producción.
