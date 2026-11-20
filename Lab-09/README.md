@@ -1,76 +1,107 @@
-# ClassroomHub
+ClassroomHub
+Sitio web educativo desarrollado con Django y respaldado por una base de datos MySQL/MariaDB. Cuenta con un catálogo público de recursos educativos, registro de usuarios, inicio y cierre de sesión, un panel privado y una página de revisión del catálogo restringida a un grupo mediante permisos.
 
-Educational Django site backed by MySQL/MariaDB. It has a public catalog of learning resources, account signup, login and logout, a private dashboard, and a catalog review page restricted to a group by permission.
+Versiones
+Python 3.15 (probado en Windows).
 
-## Versions
+Django 6.1.3.
 
-- Python 3.15 (tested on Windows)
-- Django 6.1.3
-- MariaDB (tested with 13.0.2 and 13.1.1). Django 6.1 requires MariaDB 10.11+ or MySQL 8.4+.
+MariaDB (probado con las versiones 13.0.2 y 13.1.1). Django 6.1 requiere MariaDB 10.11 o superior, o MySQL 8.4 o superior.
 
-## Setup
+Configuración inicial
+Crea y activa un entorno virtual. Luego, instala las dependencias:
 
-1. Create and activate a virtual environment, then install dependencies:
 
-   ```
-   py -m venv .venv
-   .venv\Scripts\activate
-   py -m pip install -r requirements.txt
-   ```
+bash
+py -m venv .venv
+.venv\Scripts\activate
+py -m pip install -r requirements.txt
+Crea la base de datos y una cuenta SQL (reemplaza CHANGE_ME por tu contraseña):
 
-2. Create the database and a SQL account (replace `CHANGE_ME`):
 
-   ```sql
-   CREATE DATABASE classroom_hub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   CREATE USER 'classroomhub_user'@'localhost' IDENTIFIED BY 'CHANGE_ME';
-   CREATE USER 'classroomhub_user'@'127.0.0.1' IDENTIFIED BY 'CHANGE_ME';
-   GRANT ALL PRIVILEGES ON classroom_hub.* TO 'classroomhub_user'@'localhost';
-   GRANT ALL PRIVILEGES ON classroom_hub.* TO 'classroomhub_user'@'127.0.0.1';
-   GRANT ALL PRIVILEGES ON test_classroom_hub.* TO 'classroomhub_user'@'localhost';
-   GRANT ALL PRIVILEGES ON test_classroom_hub.* TO 'classroomhub_user'@'127.0.0.1';
-   ```
+sql
+CREATE DATABASE classroom_hub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'classroomhub_user'@'localhost' IDENTIFIED BY 'CHANGE_ME';
+CREATE USER 'classroomhub_user'@'127.0.0.1' IDENTIFIED BY 'CHANGE_ME';
+GRANT ALL PRIVILEGES ON classroom_hub.* TO 'classroomhub_user'@'localhost';
+GRANT ALL PRIVILEGES ON classroom_hub.* TO 'classroomhub_user'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON test_classroom_hub.* TO 'classroomhub_user'@'localhost';
+GRANT ALL PRIVILEGES ON test_classroom_hub.* TO 'classroomhub_user'@'127.0.0.1';
+Copia el archivo .env.example y renómbralo como .env. Configura en él la misma contraseña. Nunca subas el archivo .env al repositorio.
 
-3. Copy `.env.example` to `.env` and set the same password. Never commit `.env`.
+Ejecuta las migraciones y crea un usuario administrador:
 
-4. Apply migrations and create an administrator:
 
-   ```
-   python manage.py migrate
-   python manage.py createsuperuser
-   ```
+bash
+python manage.py migrate
+python manage.py createsuperuser
+Ejecución del proyecto
 
-## Run
-
-```
+bash
 python manage.py check
 python manage.py runserver
-```
+Rutas del sitio
+Ruta
 
-## Routes
+Acceso
 
-| Route | Access |
-| --- | --- |
-| `/` | Public home page |
-| `/resources/` | Public catalog |
-| `/about/` | Public |
-| `/accounts/signup/` | Public signup (regular accounts only) |
-| `/accounts/login/` | Public login |
-| `/accounts/logout/` | POST only; GET returns 405 |
-| `/dashboard/` | Requires login |
-| `/resources/review/` | Requires login and `pages.view_resource` (403 otherwise) |
-| `/admin/` | Staff only |
+/
 
-## Reviewer group
+Página de inicio pública
 
-In Django Admin, open Groups and create `Catalog reviewers` with the permission `pages | resource | Can view resource`. Then open a user and add it to the group. Reviewers do not become staff.
+/resources/
 
-## Tests
+Catálogo público
 
-```
+/about/
+
+Página pública
+
+/accounts/signup/
+
+Registro público (solo cuentas de usuario normales)
+
+/accounts/login/
+
+Inicio de sesión público
+
+/accounts/logout/
+
+Solo permite solicitudes POST; las solicitudes GET devuelven el código 405
+
+/dashboard/
+
+Requiere iniciar sesión
+
+/resources/review/
+
+Requiere iniciar sesión y tener el permiso pages.view_resource (de lo contrario, devuelve un error 403)
+
+/admin/
+
+Acceso exclusivo para personal autorizado
+
+Grupo de revisores
+En el panel de administración de Django (Django Admin), abre la sección Groups (Grupos) y crea un grupo llamado Catalog reviewers con el siguiente permiso:
+
+pages | resource | Can view resource
+
+Después, abre el perfil de un usuario y agrégalo a ese grupo.
+
+Los usuarios que pertenezcan al grupo de revisores no obtendrán permisos de personal administrativo (staff) automáticamente.
+
+Pruebas
+
+bash
 python manage.py test pages
-```
+Las pruebas se ejecutan utilizando una base de datos independiente llamada test_classroom_hub. Por lo tanto, la cuenta SQL necesita tener permisos sobre ella.
 
-Tests run against a separate database, `test_classroom_hub`, so the SQL account needs privileges on it.
+Funcionalidades no incluidas
+Creación, edición y eliminación públicas de recursos.
+
+Recuperación de contraseñas mediante correo electrónico, autenticación OAuth y autenticación multifactor (MFA).
+
+Configuraciones para entornos de producción.
 
 ## Not included
 
